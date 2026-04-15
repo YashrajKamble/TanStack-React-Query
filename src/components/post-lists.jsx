@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addPost, fetchPosts, fetchTags } from "../api/api";
 
 const PostLists = () => {
@@ -18,6 +18,8 @@ const PostLists = () => {
     queryFn: fetchTags,
   });
 
+  const queryClient = useQueryClient();
+
   const {
     mutate,
     isError: isPostError,
@@ -26,6 +28,16 @@ const PostLists = () => {
     reset,
   } = useMutation({
     mutationFn: addPost,
+    onMutate: () => {
+      return { id: 1 };
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+        exact:true,
+        predicate:()
+      });
+    },
   });
 
   const handleSubmit = (e) => {
