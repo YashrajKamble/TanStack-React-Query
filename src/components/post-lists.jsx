@@ -31,13 +31,19 @@ const PostLists = () => {
     onMutate: () => {
       return { id: 1 };
     },
+
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: ["posts"],
-        exact:true,
-        predicate:()
+        exact: true,
+        //   predicate:(query)=>{
+        //     query.queryKey[0] ==='post' && query.queryKey[1].page >=2
+        //   }
       });
     },
+
+    // onError:(error,variables,context)=>{},
+    // onSettled:(data,error,variables,context)=>{}
   });
 
   const handleSubmit = (e) => {
@@ -80,8 +86,10 @@ const PostLists = () => {
         <button className="postbox">Post</button>
       </form>
 
-      {isLoading && <p>Loading...</p>}
+      {isLoading && isPending && <p>Loading...</p>}
       {isError && <p>{error?.message}</p>}
+      {isPostError && <p onClick={() => reset()}>Unable to Post</p>}
+
       {postData.map((post) => {
         return (
           <div key={post.id} className="post">
