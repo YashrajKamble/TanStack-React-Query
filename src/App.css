@@ -52,6 +52,7 @@ body {
   background-color: #f2f3f2;
   border-radius: 5px;
   padding: 10px;
+  color: black;
 }
 
 .post > span {
